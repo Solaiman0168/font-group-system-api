@@ -1,5 +1,7 @@
 <?php
 
+namespace Controllers;
+
 class BaseController {
     // Send response with data
     public function sendResponse($data, $statusCode = 200) {

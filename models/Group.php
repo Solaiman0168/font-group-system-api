@@ -25,21 +25,19 @@ class Group
         $query = "INSERT INTO {$this->table} (name, created_at, updated_at) VALUES (:name, NOW(), NOW())";
 
         $stmt = $this->db->prepare($query);
-
         $stmt->bindParam(':name', $this->name);
 
         if ($stmt->execute()) {
             $this->id = $this->db->lastInsertId();
             return true;
         }
-
         return false;
     }
 
     // Read all groups
     public function read()
     {
-        $query = "SELECT * FROM {$this->table}";
+        $query = "SELECT * FROM {$this->table} ORDER BY created_at DESC";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
 
@@ -51,7 +49,6 @@ class Group
     {
         $query = "SELECT * FROM {$this->table} WHERE id = :id";
         $stmt = $this->db->prepare($query);
-
         $stmt->bindParam(':id', $this->id);
         $stmt->execute();
 
@@ -61,9 +58,11 @@ class Group
     // Update a group
     public function update()
     {
-        $query = "UPDATE {$this->table} SET name = :name, updated_at = NOW() WHERE id = :id";
-        $stmt = $this->db->prepare($query);
+        $query = "UPDATE {$this->table} 
+                  SET name = :name, updated_at = NOW() 
+                  WHERE id = :id";
 
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':id', $this->id);
 
@@ -75,8 +74,8 @@ class Group
     {
         $query = "DELETE FROM {$this->table} WHERE id = :id";
         $stmt = $this->db->prepare($query);
-
         $stmt->bindParam(':id', $this->id);
+
         return $stmt->execute();
     }
 }
