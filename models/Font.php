@@ -12,7 +12,6 @@ class Font {
     public $name;
     public $file_path;
     public $created_at;
-    public $updated_at;
 
     public function __construct() {
         $this->db = Database::getConnection(); 
@@ -20,8 +19,8 @@ class Font {
 
     // Create a new font record
     public function create() {
-        $query = "INSERT INTO {$this->table} (name, file_path, created_at, updated_at) 
-                  VALUES (:name, :file_path, NOW(), NOW())";
+        $query = "INSERT INTO {$this->table} (name, file_path, created_at) 
+                  VALUES (:name, :file_path, NOW())";
         $stmt = $this->db->prepare($query);
 
         $stmt->bindParam(":name", $this->name);
@@ -46,20 +45,6 @@ class Font {
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    // Update a font record
-    public function update() {
-        $query = "UPDATE {$this->table} 
-                  SET name = :name, file_path = :file_path, updated_at = NOW() 
-                  WHERE id = :id";
-        $stmt = $this->db->prepare($query);
-
-        $stmt->bindParam(":name", $this->name);
-        $stmt->bindParam(":file_path", $this->file_path);
-        $stmt->bindParam(":id", $this->id);
-
-        return $stmt->execute();
     }
 
     // Delete a font record

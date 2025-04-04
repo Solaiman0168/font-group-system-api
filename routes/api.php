@@ -1,4 +1,6 @@
 <?php
+namespace Routes;
+
 require_once __DIR__ . '/../config/Database.php';
 require_once __DIR__ . '/../controllers/FontController.php';
 require_once __DIR__ . '/../controllers/GroupController.php';
@@ -19,7 +21,8 @@ echo json_encode(["method" => $requestMethod, "uri" => $requestUri]);
 // Font routes
 if ($requestMethod === 'POST' && $requestUri === '/createFont') {
     echo json_encode(["received" => $_POST, "files" => $_FILES]); // Debug input data
-    echo $fontController->create($_POST['name'], $_FILES['file_path']);
+    // echo "<pre>"; print_r($_FILES); echo "</pre>"; die;
+    echo $fontController->create($_FILES['file_path']);
 } elseif ($requestMethod === 'GET' && $requestUri === '/getFonts') {
     echo $fontController->read();
 } elseif ($requestMethod === 'GET' && isset($_GET['id']) && $requestUri === '/getFont') {
