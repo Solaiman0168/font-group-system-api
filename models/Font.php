@@ -19,8 +19,7 @@ class Font {
 
     // Create a new font record
     public function create() {
-        $query = "INSERT INTO {$this->table} (name, file_path, created_at) 
-                  VALUES (:name, :file_path, NOW())";
+        $query = "INSERT INTO `{$this->table}` (name, file_path, created_at) VALUES (:name, :file_path, NOW())";
         $stmt = $this->db->prepare($query);
 
         $stmt->bindParam(":name", $this->name);
