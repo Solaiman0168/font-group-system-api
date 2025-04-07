@@ -8,6 +8,21 @@ require_once __DIR__ . '/../controllers/GroupController.php';
 use Controllers\FontController;
 use Controllers\GroupController;
 
+
+// Allow CORS for the frontend running on localhost:5173
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Handle pre-flight OPTIONS request (for methods like PUT, DELETE)
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("Access-Control-Allow-Origin: http://localhost:5173");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    exit(0); // End pre-flight request handling
+}
+
+
 // Normalize request URI
 $requestUri = str_replace('/font-group-system-api', '', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 $requestMethod = $_SERVER['REQUEST_METHOD'];
@@ -16,7 +31,7 @@ $groupController = new GroupController();
 $fontController = new FontController();
 
 // Debug request details
-echo json_encode(["method" => $requestMethod, "uri" => $requestUri]);
+// echo json_encode(["method" => $requestMethod, "uri" => $requestUri]);
 
 // Font routes
 if ($requestMethod === 'POST' && $requestUri === '/createFont') {
