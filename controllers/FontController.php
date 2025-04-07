@@ -16,48 +16,85 @@ class FontController extends BaseController {
     }
 
     // Create a new font
+    // public function create($file) {
+    //     echo json_encode(["received" => $_POST, "files" => $_FILES]);
+    //     $allowedTypes = ['font/ttf'];
+    
+    //     if (!in_array($file['type'], $allowedTypes)) {
+    //         return $this->sendError("Only TTF files are allowed.", 400);
+    //     }
+    
+    //     // Extract the file name without the extension
+    //     $parts = explode(".", basename($file["name"]));
+    //     array_pop($parts); 
+    //     $fileName = implode(".", $parts); // Get the name without the extension
+    
+    //     $targetDir = __DIR__ . "/../uploads/fonts/";
+    
+    //     if (!is_dir($targetDir)) {
+    //         mkdir($targetDir, 0777, true);
+    //     }
+    
+    //     // Generate a unique name for the file and append the original extension
+    //     $uniqueFileName = uniqid() . "-" . basename($file["name"]);
+    
+    //     // Store only the file name (not the full path) in the database
+    //     $this->font->name = $fileName;
+    //     $this->font->file_path = $uniqueFileName;
+    
+    //     // Move the uploaded file to the target directory
+    //     if (move_uploaded_file($file["tmp_name"], $targetDir . $uniqueFileName)) {
+    //         // Now save only the file name in the database
+    //         if ($this->font->create()) {
+    //             return $this->sendResponse("Font created successfully.", 201);
+    //         } else {
+    //             // Delete the uploaded file if there is an error in saving the database
+    //             unlink($targetDir . $uniqueFileName);
+    //             return $this->sendError("Unable to create font in the database.", 400);
+    //         }
+    //     } else {
+    //         return $this->sendError("Failed to upload the font file.", 400);
+    //     }
+    // }
+
+
     public function create($file) {
-        $allowedTypes = ['font/ttf'];
-        // $maxFileSize = 5 * 1024 * 1024;
 
-        if (!in_array($file['type'], $allowedTypes)) {
-            return $this->sendError("Only TTF files are allowed.", 400);
-        }
-
-        
+        // Extract the file name without the extension
         $parts = explode(".", basename($file["name"]));
         array_pop($parts); 
-
-        $fileName = implode(".", $parts); 
-
-        // echo json_encode($fileName, JSON_PRETTY_PRINT);
-        // die();
-
-        // if ($file['size'] > $maxFileSize) {
-        //     return $this->sendError("File size exceeds the maximum allowed size of 5MB.", 400);
-        // }
-
+        $fileName = implode(".", $parts); // Get the name without the extension
+    
         $targetDir = __DIR__ . "/../uploads/fonts/";
+    
         if (!is_dir($targetDir)) {
             mkdir($targetDir, 0777, true);
         }
-
-        $filePath = $targetDir . uniqid() . "-" . basename($file["name"]);
-
-        if (move_uploaded_file($file["tmp_name"], $filePath)) {
-            $this->font->name = $fileName;
-            $this->font->file_path = $filePath;
-
-            if ($this->font->create()) {
-                return $this->sendResponse("Font created successfully.", 201);
+    
+        // Generate a unique name for the file and append the original extension
+        $uniqueFileName = uniqid() . "-" . basename($file["name"]);
+    
+        // Store only the file name (not the full path) in the database
+        $this->font->name = $fileName;
+        $this->font->file_path = $uniqueFileName;
+    
+        // Move the uploaded file to the target directory
+        if (move_uploaded_file($file["tmp_name"], $targetDir . $uniqueFileName)) {
+            $fontInfo = $this->font->create();
+            // echo json_encode(["fontInfo" => $fontInfo]); die;
+            if ($fontInfo['status'] === 'success') {
+                return $this->sendResponse($fontInfo, 201);
             } else {
-                unlink($filePath);
+                // Delete the uploaded file if there is an error in saving the database
+                unlink($targetDir . $uniqueFileName);
                 return $this->sendError("Unable to create font in the database.", 400);
             }
         } else {
             return $this->sendError("Failed to upload the font file.", 400);
         }
     }
+    
+    
 
     // Read all fonts
     public function read() {

@@ -19,14 +19,39 @@ class Font {
 
     // Create a new font record
     public function create() {
+        // Prepare the query to insert the font
         $query = "INSERT INTO `{$this->table}` (name, file_path, created_at) VALUES (:name, :file_path, NOW())";
         $stmt = $this->db->prepare($query);
-
+    
+        // Bind the parameters
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":file_path", $this->file_path);
-
-        return $stmt->execute();
+    
+        // Execute the statement
+        if ($stmt->execute()) {
+            // After insertion, get the last inserted ID
+            $lastInsertedId = $this->db->lastInsertId();
+    
+            // Prepare the response data to return
+            $data = [
+                'id' => $lastInsertedId,
+                'name' => $this->name,
+                'file_path' => $this->file_path,
+            ];
+    
+            // Return the response with the newly created font's data
+            return [
+                'status' => 'success',
+                'data' => [$data] // Return data as an array
+            ];
+        }
+    
+        return [
+            'status' => 'error',
+            'message' => 'Unable to create font in the database.',
+        ];
     }
+    
 
     // Read all fonts
     public function read() {

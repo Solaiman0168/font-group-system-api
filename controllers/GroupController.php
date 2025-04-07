@@ -22,6 +22,7 @@ class GroupController extends BaseController {
     // Create a new group
     public function create($request) {
         // Set the title for the group
+        // echo json_encode(["request" => $request]); die;
         $this->group->title = $request['title'];
     
         $isGroupTitleExists = $this->group->isGroupTitleExists($this->group->title);
@@ -88,8 +89,8 @@ class GroupController extends BaseController {
     public function update($id, $inputData) {
         // Set the group ID from the URL and the new title from the body
         $this->group->id = $id;
-        // echo json_encode(["title" => $inputData[0]['title']]); die;
-        $this->group->title = $inputData[0]['title'];
+        // echo json_encode(["id" => $id, "title" => $inputData["title"]]); die;
+        $this->group->title = $inputData['title'];
     
         // Fetch the existing group
         $existingGroup = $this->group->readOne($id);
@@ -108,8 +109,8 @@ class GroupController extends BaseController {
         $this->groupFont->deleteByGroupId($id);  // Assuming you have a method to delete existing font associations
     
         // Insert the new font associations
-        if (isset($inputData[0]['font_ids']) && count($inputData[0]['font_ids']) > 0) {
-            foreach ($inputData[0]['font_ids'] as $font_id) {
+        if (isset($inputData['font_ids']) && count($inputData['font_ids']) > 0) {
+            foreach ($inputData['font_ids'] as $font_id) {
                 $this->groupFont->group_id = $id;
                 $this->groupFont->font_id = $font_id;
                 if (!$this->groupFont->create()) {

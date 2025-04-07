@@ -8,29 +8,41 @@ require_once __DIR__ . '/../controllers/GroupController.php';
 use Controllers\FontController;
 use Controllers\GroupController;
 
+// Allow CORS for all origins (or use the specific localhost address as required)
+// Add this at the beginning of your PHP file to handle CORS for static files
+header("Access-Control-Allow-Origin: *");  // Allow CORS for all origins or replace with a specific origin
 
-// // Allow CORS for the frontend running on localhost:5173
-// header("Access-Control-Allow-Origin: http://localhost:5173");
-// header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-// header("Access-Control-Allow-Headers: Content-Type, Authorization");
+// If you are serving static files (like fonts), ensure the correct MIME type and CORS header is set.
+if (isset($_GET['font_file'])) {
+    $fontFilePath = __DIR__ . '/uploads/fonts/' . $_GET['font_file'];  // Assuming the font file is passed in the query string as font_file
 
-// // Handle pre-flight OPTIONS request (for methods like PUT, DELETE)
-// if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-//     header("Access-Control-Allow-Origin: http://localhost:5173");
-//     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-//     header("Access-Control-Allow-Headers: Content-Type, Authorization");
-//     exit(0); // End pre-flight request handling
-// }
+    if (file_exists($fontFilePath)) {
+        // Set the appropriate content type for fonts
+        header("Content-Type: font/ttf"); // or 'application/x-font-ttf' for ttf fonts
+        
+        // Set CORS headers
+        header("Access-Control-Allow-Origin: *");  // Adjust as necessary
 
-// Allow requests from all origins (for development purposes)
-header("Access-Control-Allow-Origin: *"); // Allow all domains
-header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE, OPTIONS"); // Allow these HTTP methods
-header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Allow these headers
-
-// Handle preflight OPTIONS request (CORS)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
+        // Read and serve the font file
+        readfile($fontFilePath);
+        exit;
+    } else {
+        header("HTTP/1.1 404 Not Found");
+        echo "Font file not found.";
+    }
 }
+
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Handle pre-flight OPTIONS request (for methods like PUT, DELETE)
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("Access-Control-Allow-Origin: *");  // Adjust the allowed origins here if required
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    exit(0); // End pre-flight request handling
+}
+
 
 
 // Normalize request URI
@@ -45,16 +57,17 @@ $fontController = new FontController();
 
 // Font routes
 if ($requestMethod === 'POST' && $requestUri === '/createFont') {
-    echo json_encode(["received" => $_POST, "files" => $_FILES]); // Debug input data
+    // echo json_encode(["received" => $_POST, "files" => $_FILES]); // Debug input data
     // echo "<pre>"; print_r($_FILES); echo "</pre>"; die;
-    echo $fontController->create($_FILES['file_path']);
+    echo $fontController->create($_FILES['file']);
 } elseif ($requestMethod === 'GET' && $requestUri === '/getFonts') {
     echo $fontController->read();
 } 
-// elseif ($requestMethod === 'GET' && isset($_GET['id']) && $requestUri === '/getFont') {
-//     echo $fontController->readOne($_GET['id']);
-// } 
+elseif ($requestMethod === 'GET' && isset($_GET['id']) && $requestUri === '/getFont') {
+    echo $fontController->readOne($_GET['id']);
+} 
 elseif ($requestMethod === 'DELETE' && isset($_GET['id']) && $requestUri === '/deleteFont') {
+    // echo json_encode(["id" => $_GET['id']]); die;
     echo $fontController->delete($_GET['id']);
 } 
 // elseif ($requestMethod === 'PUT' && isset($_GET['id']) && $requestUri === '/updateFont') {
@@ -65,17 +78,17 @@ elseif ($requestMethod === 'DELETE' && isset($_GET['id']) && $requestUri === '/d
 
 // Group routes
 if ($requestMethod === 'POST' && $requestUri === '/createGroup') {
-    echo json_encode(["received" => $_POST]); // Debug input data
+    // echo json_encode(["received" => $_POST]); // Debug input data
     echo $groupController->create($_POST);
 } elseif ($requestMethod === 'GET' && $requestUri === '/getGroups') {
     echo $groupController->read();
 } elseif ($requestMethod === 'GET' && isset($_GET['id']) && $requestUri === '/getGroup') {
     echo $groupController->readOne($_GET['id']); 
 } elseif ($requestMethod === 'DELETE' && isset($_GET['id']) && $requestUri === '/deleteGroup') {
+    // echo json_encode(["id" => $_GET['id']]); die;
     echo $groupController->delete($_GET['id']);
 } elseif ($requestMethod === 'PUT' && isset($_GET['id']) && $requestUri === '/updateGroup') {
    $inputData = json_decode(file_get_contents("php://input"), true);
-//    echo json_encode(["id" => $_GET['id'], "inputData" => $inputData]); die;
    echo $groupController->update($_GET['id'], $inputData); // Pass the group ID and input data
 }
 
