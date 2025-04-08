@@ -83,7 +83,7 @@ class FontController extends BaseController {
             $fontInfo = $this->font->create();
             // echo json_encode(["fontInfo" => $fontInfo]); die;
             if ($fontInfo['status'] === 'success') {
-                return $this->sendResponse($fontInfo, 201);
+                return $this->sendResponse($fontInfo['data'], 201);
             } else {
                 // Delete the uploaded file if there is an error in saving the database
                 unlink($targetDir . $uniqueFileName);

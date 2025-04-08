@@ -58,7 +58,6 @@ $fontController = new FontController();
 // Font routes
 if ($requestMethod === 'POST' && $requestUri === '/createFont') {
     // echo json_encode(["received" => $_POST, "files" => $_FILES]); // Debug input data
-    // echo "<pre>"; print_r($_FILES); echo "</pre>"; die;
     echo $fontController->create($_FILES['file']);
 } elseif ($requestMethod === 'GET' && $requestUri === '/getFonts') {
     echo $fontController->read();
@@ -67,25 +66,17 @@ elseif ($requestMethod === 'GET' && isset($_GET['id']) && $requestUri === '/getF
     echo $fontController->readOne($_GET['id']);
 } 
 elseif ($requestMethod === 'DELETE' && isset($_GET['id']) && $requestUri === '/deleteFont') {
-    // echo json_encode(["id" => $_GET['id']]); die;
     echo $fontController->delete($_GET['id']);
 } 
-// elseif ($requestMethod === 'PUT' && isset($_GET['id']) && $requestUri === '/updateFont') {
-//     // Assuming you send a JSON body for update
-//     $inputData = json_decode(file_get_contents("php://input"), true);
-//     echo $fontController->update($_GET['id'], $inputData['name'], $inputData['file_path']);
-// }
 
 // Group routes
 if ($requestMethod === 'POST' && $requestUri === '/createGroup') {
-    // echo json_encode(["received" => $_POST]); // Debug input data
     echo $groupController->create($_POST);
 } elseif ($requestMethod === 'GET' && $requestUri === '/getGroups') {
     echo $groupController->read();
 } elseif ($requestMethod === 'GET' && isset($_GET['id']) && $requestUri === '/getGroup') {
     echo $groupController->readOne($_GET['id']); 
 } elseif ($requestMethod === 'DELETE' && isset($_GET['id']) && $requestUri === '/deleteGroup') {
-    // echo json_encode(["id" => $_GET['id']]); die;
     echo $groupController->delete($_GET['id']);
 } elseif ($requestMethod === 'PUT' && isset($_GET['id']) && $requestUri === '/updateGroup') {
    $inputData = json_decode(file_get_contents("php://input"), true);

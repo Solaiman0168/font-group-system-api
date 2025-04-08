@@ -95,42 +95,81 @@ class Group
 
 
 
-
     public function readOne($id)
-    {
-        // $query = "SELECT * FROM `{$this->table}` WHERE id = :id"; // Make sure the table name is properly escaped with backticks
-        $query = "SELECT g.id, g.title, g.created_at, g.updated_at, f.id as font_id, f.name as font_name, f.file_path as font_file_path
-        FROM `{$this->table}` g
-        LEFT JOIN `group_fonts` gf ON g.id = gf.group_id
-        LEFT JOIN `fonts` f ON gf.font_id = f.id
-        WHERE g.id = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id); // Bind the id parameter
-        $stmt->execute();
+{
+    $query = "SELECT g.id, g.title, g.created_at, g.updated_at, f.id as font_id, f.name as font_name, f.file_path as font_file_path, f.created_at as font_created_at
+    FROM `{$this->table}` g
+    LEFT JOIN `group_fonts` gf ON g.id = gf.group_id
+    LEFT JOIN `fonts` f ON gf.font_id = f.id
+    WHERE g.id = :id";
     
-        $groupInfo = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the result
-        // echo json_encode(["groupInfo" => $groupInfo]);
-        $groupData = [];
-        if (!isset($groupData[$groupInfo['id']])) {
-            $groupData[$groupInfo['id']] = [
-                'id' => $groupInfo['id'],
-                'title' => $groupInfo['title'],
-                'created_at' => $groupInfo['created_at'],
-                'updated_at' => $groupInfo['updated_at'],
-                'fonts' => []
-            ];
+    $stmt = $this->db->prepare($query);
+    $stmt->bindParam(':id', $id); // Bind the id parameter
+    $stmt->execute();
+    
+    $groupInfo = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all results
+
+    $groupData = [];
+        foreach ($groupInfo as $group) {
+            if (!isset($groupData[$group['id']])) {
+                $groupData[$group['id']] = [
+                    'id' => $group['id'],
+                    'title' => $group['title'],
+                    'created_at' => $group['created_at'],
+                    'updated_at' => $group['updated_at'],
+                    'fonts' => []
+                ];
+            }
+            if ($group['font_id']) {
+                $groupData[$group['id']]['fonts'][] = [
+                    'id' => $group['font_id'],
+                    'name' => $group['font_name'],
+                    'file_path' => $group['font_file_path'],
+                    'created_at' => $group['font_created_at']
+                ];
+            }
         }
+
+    return array_values($groupData);  // Return the group data in the same format as readWithFonts
+}
+
+
+
+    // public function readOne($id)
+    // {
+    //     // $query = "SELECT * FROM `{$this->table}` WHERE id = :id"; // Make sure the table name is properly escaped with backticks
+    //     $query = "SELECT g.id, g.title, g.created_at, g.updated_at, f.id as font_id, f.name as font_name, f.file_path as font_file_path
+    //     FROM `{$this->table}` g
+    //     LEFT JOIN `group_fonts` gf ON g.id = gf.group_id
+    //     LEFT JOIN `fonts` f ON gf.font_id = f.id
+    //     WHERE g.id = :id";
+    //     $stmt = $this->db->prepare($query);
+    //     $stmt->bindParam(':id', $id); // Bind the id parameter
+    //     $stmt->execute();
+    
+    //     $groupInfo = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the result
+    //     // echo json_encode(["groupInfo" => $groupInfo]);
+    //     $groupData = [];
+    //     if (!isset($groupData[$groupInfo['id']])) {
+    //         $groupData[$groupInfo['id']] = [
+    //             'id' => $groupInfo['id'],
+    //             'title' => $groupInfo['title'],
+    //             'created_at' => $groupInfo['created_at'],
+    //             'updated_at' => $groupInfo['updated_at'],
+    //             'fonts' => []
+    //         ];
+    //     }
         
-        if ($groupInfo['font_id']) {
-            $groupData[$groupInfo['id']]['fonts'][] = [
-                'id' => $groupInfo['font_id'],
-                'name' => $groupInfo['font_name'],
-                'file_path' => $groupInfo['font_file_path']
-            ];
-        }
-        return array_values($groupData);
-        // return $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the result
-    }
+    //     if ($groupInfo['font_id']) {
+    //         $groupData[$groupInfo['id']]['fonts'][] = [
+    //             'id' => $groupInfo['font_id'],
+    //             'name' => $groupInfo['font_name'],
+    //             'file_path' => $groupInfo['font_file_path']
+    //         ];
+    //     }
+    //     return $groupData;
+    //     // return $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the result
+    // }
 
 
     // Update a group

@@ -20,19 +20,58 @@ class GroupController extends BaseController {
     }
 
     // Create a new group
+    // public function create($request) {
+    //     // Set the title for the group
+    //     // echo json_encode(["request" => $request]); die;
+    //     $this->group->title = $request['title'];
+    
+    //     $isGroupTitleExists = $this->group->isGroupTitleExists($this->group->title);
+    //     if ($isGroupTitleExists) {
+    //         return $this->sendError("Group with title {$this->group->title} already exists.", 400);
+    //     }
+    //     // Create the group
+    //     if ($this->group->create()) {
+    //         // After creating the group, get the ID of the newly created group
+    //         $this->group->id = $this->group->getDb()->lastInsertId(); // Use the getter method
+    
+    //         // Set the group_id in GroupFont and insert associated font_ids
+    //         $this->groupFont->group_id = $this->group->id;
+    
+    //         if (isset($request['font_ids']) && count($request['font_ids']) > 0) {
+    //             foreach ($request['font_ids'] as $font_id) {
+    //                 // Check if the font_id exists
+    //                 if ($this->groupFont->fontExists($font_id)) {
+    //                     $this->groupFont->font_id = $font_id;
+    //                     // Create the record in the GroupFont table
+    //                     $this->groupFont->create();
+    //                 } else {
+    //                     return $this->sendError("Font with ID {$font_id} does not exist.", 400);
+    //                 }
+    //             }
+    //         }
+    
+    //         return $this->sendResponse("Group created successfully.", 201);
+    //     }
+    
+    //     return $this->sendError("Unable to create group.", 400);
+    // }
+    
+    
+    
     public function create($request) {
         // Set the title for the group
-        // echo json_encode(["request" => $request]); die;
         $this->group->title = $request['title'];
     
+        // Check if the group title already exists
         $isGroupTitleExists = $this->group->isGroupTitleExists($this->group->title);
         if ($isGroupTitleExists) {
             return $this->sendError("Group with title {$this->group->title} already exists.", 400);
         }
+    
         // Create the group
         if ($this->group->create()) {
-            // After creating the group, get the ID of the newly created group
-            $this->group->id = $this->group->getDb()->lastInsertId(); // Use the getter method
+            // Get the ID of the newly created group
+            $this->group->id = $this->group->getDb()->lastInsertId();
     
             // Set the group_id in GroupFont and insert associated font_ids
             $this->groupFont->group_id = $this->group->id;
@@ -50,15 +89,17 @@ class GroupController extends BaseController {
                 }
             }
     
-            return $this->sendResponse("Group created successfully.", 201);
+            // Return the created group along with its fonts
+            $groupData = $this->group->readOne($this->group->id);  // Fetch group and its fonts
+    
+            return $this->sendResponse($groupData, 201);  // Return the group data
         }
     
         return $this->sendError("Unable to create group.", 400);
     }
+
     
-    
-    
-    
+
     
 
     // Read all groups
