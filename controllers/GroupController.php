@@ -159,8 +159,10 @@ class GroupController extends BaseController {
                 }
             }
         }
+
+        $groupData = $this->group->readOne($id);
     
-        return $this->sendResponse("Group and fonts updated successfully.", 200);
+        return $this->sendResponse($groupData, 200);
     }
 
     
