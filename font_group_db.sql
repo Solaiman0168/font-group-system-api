@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 07, 2025 at 05:08 AM
+-- Generation Time: Apr 08, 2025 at 05:19 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.10
 
@@ -39,10 +39,18 @@ CREATE TABLE `fonts` (
 --
 
 INSERT INTO `fonts` (`id`, `name`, `file_path`, `created_at`) VALUES
-(1, 'SHREK___', 'D:\\laragon\\www\\font-group-system-api\\controllers/../uploads/fonts/67f0d533ca69f-SHREK___.TTF', '2025-04-05 07:01:07'),
-(2, 'SHREK___', 'D:\\laragon\\www\\font-group-system-api\\controllers/../uploads/fonts/67f12cf236e70-SHREK___.TTF', '2025-04-05 13:15:30'),
-(3, 'Poppins-Black', 'D:\\laragon\\www\\font-group-system-api\\controllers/../uploads/fonts/67f12d0459895-Poppins-Black.ttf', '2025-04-05 13:15:48'),
-(4, 'Poppins-Thin', 'D:\\laragon\\www\\font-group-system-api\\controllers/../uploads/fonts/67f12d0f67106-Poppins-Thin.ttf', '2025-04-05 13:15:59');
+(3, 'Poppins-Black', '67f12d0459895-Poppins-Black.ttf', '2025-04-05 13:15:48'),
+(4, 'Poppins-Thin', '67f12d0f67106-Poppins-Thin.ttf', '2025-04-05 13:15:59'),
+(8, 'NotoSansGunjalaGondi-VariableFont_wght', '67f3bb1f987f0-NotoSansGunjalaGondi-VariableFont_wght.ttf', '2025-04-07 11:46:39'),
+(9, 'NotoSansGunjalaGondi-VariableFont_wght', '67f3bb4515bca-NotoSansGunjalaGondi-VariableFont_wght.ttf', '2025-04-07 11:47:17'),
+(26, 'NotoSansGunjalaGondi-SemiBold', '67f3e5370b923-NotoSansGunjalaGondi-SemiBold.ttf', '2025-04-07 14:46:15'),
+(27, 'NotoSansGunjalaGondi-Medium', '67f3e5d979320-NotoSansGunjalaGondi-Medium.ttf', '2025-04-07 14:48:57'),
+(28, 'NotoSansGunjalaGondi-Bold', '67f3e63897beb-NotoSansGunjalaGondi-Bold.ttf', '2025-04-07 14:50:32'),
+(29, 'NotoSansGunjalaGondi-Regular', '67f4aa3803cf1-NotoSansGunjalaGondi-Regular.ttf', '2025-04-08 04:46:48'),
+(30, 'NotoSansGunjalaGondi-SemiBold', '67f4ab3a0a3a5-NotoSansGunjalaGondi-SemiBold.ttf', '2025-04-08 04:51:06'),
+(31, 'NotoSansGunjalaGondi-VariableFont_wght', '67f4ab7df0952-NotoSansGunjalaGondi-VariableFont_wght.ttf', '2025-04-08 04:52:13'),
+(32, 'Roboto-VariableFont_wdth,wght', '67f4af0b14e34-Roboto-VariableFont_wdth,wght.ttf', '2025-04-08 05:07:23'),
+(33, 'Roboto_Condensed-Bold', '67f4af1acaf88-Roboto_Condensed-Bold.ttf', '2025-04-08 05:07:38');
 
 -- --------------------------------------------------------
 
@@ -62,7 +70,11 @@ CREATE TABLE `groups` (
 --
 
 INSERT INTO `groups` (`id`, `title`, `created_at`, `updated_at`) VALUES
-(12, 'Broken', '2025-04-06 09:42:17', '2025-04-06 10:53:37');
+(30, 'Gondi-Var', '2025-04-08 03:59:17', '2025-04-08 05:10:11'),
+(31, 'Gondi-V', '2025-04-08 03:59:53', '2025-04-08 05:15:19'),
+(32, 'GunjalaGondi', '2025-04-08 04:37:45', '2025-04-08 04:37:45'),
+(33, 'GunjalaGo', '2025-04-08 05:07:59', '2025-04-08 05:08:13'),
+(34, 'SansGunjalaGon', '2025-04-08 05:15:55', '2025-04-08 05:16:01');
 
 -- --------------------------------------------------------
 
@@ -82,8 +94,12 @@ CREATE TABLE `group_fonts` (
 --
 
 INSERT INTO `group_fonts` (`id`, `group_id`, `font_id`, `created_at`) VALUES
-(21, 12, 3, '2025-04-06 10:53:37'),
-(22, 12, 4, '2025-04-06 10:53:37');
+(72, 32, 8, '2025-04-08 04:37:45'),
+(73, 32, 8, '2025-04-08 04:37:45'),
+(76, 33, 29, '2025-04-08 05:08:13'),
+(77, 30, 28, '2025-04-08 05:10:11'),
+(78, 31, 28, '2025-04-08 05:15:19'),
+(81, 34, 28, '2025-04-08 05:16:01');
 
 --
 -- Indexes for dumped tables
@@ -117,19 +133,19 @@ ALTER TABLE `group_fonts`
 -- AUTO_INCREMENT for table `fonts`
 --
 ALTER TABLE `fonts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `group_fonts`
 --
 ALTER TABLE `group_fonts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- Constraints for dumped tables
