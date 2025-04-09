@@ -8,36 +8,14 @@ require_once __DIR__ . '/../controllers/GroupController.php';
 use Controllers\FontController;
 use Controllers\GroupController;
 
-// Allow CORS for all origins (or use the specific localhost address as required)
-// Add this at the beginning of your PHP file to handle CORS for static files
-header("Access-Control-Allow-Origin: *");  // Allow CORS for all origins or replace with a specific origin
-
-// If you are serving static files (like fonts), ensure the correct MIME type and CORS header is set.
-if (isset($_GET['font_file'])) {
-    $fontFilePath = __DIR__ . '/uploads/fonts/' . $_GET['font_file'];  // Assuming the font file is passed in the query string as font_file
-
-    if (file_exists($fontFilePath)) {
-        // Set the appropriate content type for fonts
-        header("Content-Type: font/ttf"); // or 'application/x-font-ttf' for ttf fonts
-        
-        // Set CORS headers
-        header("Access-Control-Allow-Origin: *");  // Adjust as necessary
-
-        // Read and serve the font file
-        readfile($fontFilePath);
-        exit;
-    } else {
-        header("HTTP/1.1 404 Not Found");
-        echo "Font file not found.";
-    }
-}
+header("Access-Control-Allow-Origin: *");  
 
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-// Handle pre-flight OPTIONS request (for methods like PUT, DELETE)
+
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-    header("Access-Control-Allow-Origin: *");  // Adjust the allowed origins here if required
+    header("Access-Control-Allow-Origin: *");  
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
     exit(0); // End pre-flight request handling
