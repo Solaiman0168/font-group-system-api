@@ -22,8 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 
-
-// Normalize request URI
 $requestUri = str_replace('/font-group-system-api', '', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
